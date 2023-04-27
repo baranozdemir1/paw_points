@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/components/custom_suffix_icon.dart';
-import 'package:paw_points/components/default_button.dart';
-import 'package:paw_points/components/form_error.dart';
-import 'package:paw_points/constants.dart';
-import 'package:paw_points/helpers/keyboard.dart';
-import 'package:paw_points/screens/login_success/login_success_screen.dart';
-import 'package:paw_points/size_config.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:paw_points/screens/home/home_screen.dart';
+import '../../../vm/login/login_controller.dart';
+import '../../../vm/login/login_state.dart';
+import '../../../components/custom_suffix_icon.dart';
+import '../../../components/default_button.dart';
+import '../../../constants.dart';
+import '../../../helpers/keyboard.dart';
+import '../../../screens/login_success/login_success_screen.dart';
+import '../../../size_config.dart';
 
-class LoginForm extends StatefulWidget {
+class LoginForm extends StatefulHookConsumerWidget {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  ConsumerState<LoginForm> createState() => _LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _LoginFormState extends ConsumerState<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   bool? remember = false;
-  final List<String?> errors = [];
-
-  void addError({String? error}) {
-    if (!errors.contains(error)) {
-      setState(() {
-        errors.add(error);
-      });
-    }
-  }
-
-  void removeError({String? error}) {
-    if (errors.contains(error)) {
-      setState(() {
-        errors.remove(error);
-      });
-    }
-  }
+  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<LoginState>(
+      loginControllerProvider,
+      ((previus, state) {
+        if (state is LoginStateError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.error),
+            ),
+          );
+        }
+      }),
+    );
+
     return Form(
       key: _formKey,
       child: Column(
@@ -71,20 +71,48 @@ class _LoginFormState extends State<LoginForm> {
               )
             ],
           ),
-          FormError(errors: errors),
           SizedBox(
             height: getProportionateScreenHeight(20),
           ),
-          DefaultButton(
-            text: 'Continue',
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                KeyboardUtil.hideKeyboard(context);
-                Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-              }
-            },
+          SizedBox(
+            width: double.infinity,
+            height: getProportionateScreenHeight(56),
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              foregroundColor: Colors.white,
+              backgroundColor: kPrimaryColor,
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  setState(() => _loading = true);
+                  KeyboardUtil.hideKeyboard(context);
+                  await ref
+                      .read(loginControllerProvider.notifier)
+                      .login(emailController.text, passwordController.text);
+                  setState(() => _loading = false);
+
+                  Navigator.pushNamed(context, HomeScreen.routeName);
+                }
+              },
+              child: _loading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      'Login',
+                      style: TextStyle(
+                        fontSize: getProportionateScreenWidth(18),
+                        color: Colors.white,
+                      ),
+                    ),
+            ),
           ),
         ],
       ),
@@ -94,22 +122,12 @@ class _LoginFormState extends State<LoginForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          removeError(error: kShortPassError);
-        }
-        return;
-      },
+      controller: passwordController,
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: kPassNullError);
-          return '';
+          return kPassNullError;
         } else if (value.length <= 8) {
-          addError(error: kShortPassError);
-          return '';
+          return kShortPassError;
         }
         return null;
       },
@@ -126,23 +144,13 @@ class _LoginFormState extends State<LoginForm> {
 
   TextFormField buildEmailFormField() {
     return TextFormField(
+      controller: emailController,
       keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
-        }
-        return;
-      },
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: kEmailNullError);
-          return '';
+          return kEmailNullError;
         } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
-          return '';
+          return kInvalidEmailError;
         }
         return null;
       },

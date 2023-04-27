@@ -1,60 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/components/custom_suffix_icon.dart';
-import 'package:paw_points/components/form_error.dart';
-import 'package:paw_points/constants.dart';
-import 'package:paw_points/size_config.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:paw_points/helpers/keyboard.dart';
+import 'package:paw_points/screens/home/home_screen.dart';
+import 'package:paw_points/vm/register/register_controller.dart';
+import '../../../components/custom_suffix_icon.dart';
+import '../../../constants.dart';
+import '../../../size_config.dart';
 
-class RegisterForm extends StatefulWidget {
+class RegisterForm extends StatefulHookConsumerWidget {
   const RegisterForm({Key? key}) : super(key: key);
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
-  String? email;
-  String? password;
-  String? confirmPassword;
-  bool remember = false;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   bool _loading = false;
-  final List<String?> errors = [];
-
-  void handleRegister(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      setState(() => _loading = true);
-      // print(email);
-      // print(password);
-
-      // try {
-      //   await Auth().registerWithEmailAndPassword(email!, password!);
-      // } on Exception catch (_, e) {
-      //   throw e;
-      // }
-
-      setState(() => _loading = false);
-
-      // if all are valid then go to success screen
-      // Navigator.pushNamed(context, RegisterScreen.routeName);
-    }
-  }
-
-  void addError({String? error}) {
-    if (!errors.contains(error)) {
-      setState(() {
-        errors.add(error);
-      });
-    }
-  }
-
-  void removeError({String? error}) {
-    if (errors.contains(error)) {
-      setState(() {
-        errors.remove(error);
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +33,28 @@ class _RegisterFormState extends State<RegisterForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           buildConfirmPassFormField(),
           SizedBox(height: getProportionateScreenHeight(20)),
-          FormError(errors: errors),
-          SizedBox(height: getProportionateScreenHeight(20)),
           SizedBox(
             width: double.infinity,
             height: getProportionateScreenHeight(56),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                foregroundColor: Colors.white,
-                backgroundColor: kPrimaryColor,
+            child: FloatingActionButton(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
               ),
-              onPressed: () => handleRegister(context),
+              foregroundColor: Colors.white,
+              backgroundColor: kPrimaryColor,
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  setState(() => _loading = true);
+                  KeyboardUtil.hideKeyboard(context);
+                  await ref
+                      .read(registerControllerProvider.notifier)
+                      .register(emailController.text, passwordController.text);
+                  setState(() => _loading = false);
+
+                  Navigator.pushNamed(context, HomeScreen.routeName);
+                }
+              },
               child: _loading
                   ? const SizedBox(
                       width: 20,
@@ -107,22 +81,12 @@ class _RegisterFormState extends State<RegisterForm> {
   TextFormField buildConfirmPassFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => confirmPassword = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.isNotEmpty && password == confirmPassword) {
-          removeError(error: kMatchPassError);
-        }
-        confirmPassword = value;
-      },
+      controller: confirmPasswordController,
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: kPassNullError);
-          return '';
-        } else if ((password != value)) {
-          addError(error: kMatchPassError);
-          return '';
+          return kPassNullError;
+        } else if ((passwordController.text != value)) {
+          return kMatchPassError;
         }
         return null;
       },
@@ -138,22 +102,12 @@ class _RegisterFormState extends State<RegisterForm> {
   TextFormField buildPasswordFormField() {
     return TextFormField(
       obscureText: true,
-      onSaved: (newValue) => password = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kPassNullError);
-        } else if (value.length >= 8) {
-          removeError(error: kShortPassError);
-        }
-        password = value;
-      },
+      controller: passwordController,
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: kPassNullError);
-          return '';
+          return kPassNullError;
         } else if (value.length < 8) {
-          addError(error: kShortPassError);
-          return '';
+          return kShortPassError;
         }
         return null;
       },
@@ -169,22 +123,12 @@ class _RegisterFormState extends State<RegisterForm> {
   TextFormField buildEmailFormField() {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
-      onSaved: (newValue) => email = newValue,
-      onChanged: (value) {
-        if (value.isNotEmpty) {
-          removeError(error: kEmailNullError);
-        } else if (emailValidatorRegExp.hasMatch(value)) {
-          removeError(error: kInvalidEmailError);
-        }
-        return;
-      },
+      controller: emailController,
       validator: (value) {
         if (value!.isEmpty) {
-          addError(error: kEmailNullError);
-          return '';
+          return kEmailNullError;
         } else if (!emailValidatorRegExp.hasMatch(value)) {
-          addError(error: kInvalidEmailError);
-          return '';
+          return kInvalidEmailError;
         }
         return null;
       },

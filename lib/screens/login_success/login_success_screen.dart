@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/screens/login_success/components/login_success_body.dart';
-import 'package:paw_points/size_config.dart';
+import '../../screens/login_success/components/login_success_body.dart';
+import '../../size_config.dart';
 
 class LoginSuccessScreen extends StatelessWidget {
   const LoginSuccessScreen({Key? key}) : super(key: key);

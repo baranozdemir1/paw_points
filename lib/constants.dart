@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/size_config.dart';
+import 'size_config.dart';
 
 const kPrimaryColor = Color(0xFF551cab);
 const kPrimaryLightColor = Color(0xFFFFECDF);

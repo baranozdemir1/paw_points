@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/constants.dart';
-import 'package:paw_points/screens/register/register_screen.dart';
-import 'package:paw_points/size_config.dart';
+import '../constants.dart';
+import '../screens/register/register_screen.dart';
+import '../size_config.dart';
 
 class NoAccountText extends StatelessWidget {
   const NoAccountText({

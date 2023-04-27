@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/components/default_button.dart';
-import 'package:paw_points/constants.dart';
-import 'package:paw_points/screens/login/login_screen.dart';
-import 'package:paw_points/screens/splash/components/splash_content.dart';
-import 'package:paw_points/size_config.dart';
+import '../../../components/default_button.dart';
+import '../../../constants.dart';
+import '../../../screens/login/login_screen.dart';
+import '../../../screens/splash/components/splash_content.dart';
+import '../../../size_config.dart';
 
 class SplashBody extends StatefulWidget {
   const SplashBody({Key? key}) : super(key: key);

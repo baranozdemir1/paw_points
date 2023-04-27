@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/components/default_button.dart';
-import 'package:paw_points/size_config.dart';
+import '../../../components/default_button.dart';
+import '../../../size_config.dart';
 
 class LoginSuccessBody extends StatelessWidget {
   const LoginSuccessBody({Key? key}) : super(key: key);

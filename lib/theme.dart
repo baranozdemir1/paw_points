@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:paw_points/constants.dart';
+import 'constants.dart';
 
 ThemeData theme() {
   return ThemeData(
@@ -11,19 +11,20 @@ ThemeData theme() {
     textTheme: textTheme(),
     inputDecorationTheme: inputDecorationTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
+    useMaterial3: true,
   );
 }
 
 InputDecorationTheme inputDecorationTheme() {
   OutlineInputBorder outlineInputBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(28),
+    borderRadius: BorderRadius.circular(20),
     borderSide: const BorderSide(color: kTextColor),
     gapPadding: 10,
   );
 
   return InputDecorationTheme(
-    floatingLabelBehavior: FloatingLabelBehavior.always,
-    contentPadding: const EdgeInsets.symmetric(horizontal: 42, vertical: 20),
+    floatingLabelBehavior: FloatingLabelBehavior.auto,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
     enabledBorder: outlineInputBorder,
     focusedBorder: outlineInputBorder,
     border: outlineInputBorder,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/components/social_card.dart';
-import 'package:paw_points/constants.dart';
-import 'package:paw_points/screens/register/components/register_form.dart';
-import 'package:paw_points/size_config.dart';
+import '../../../components/social_card.dart';
+import '../../../constants.dart';
+import '../../../screens/register/components/register_form.dart';
+import '../../../size_config.dart';
 
 class RegisterBody extends StatelessWidget {
   const RegisterBody({Key? key}) : super(key: key);

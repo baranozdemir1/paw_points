@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "86898584543",
+    "project_id": "paw-points-109d2",
+    "storage_bucket": "paw-points-109d2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:86898584543:android:11625f88b9fa02b0ff726a",
+        "android_client_info": {
+          "package_name": "com.example.paw_points"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "86898584543-tadf6e4j3ghpl5ni4q3m9mgltsqq24it.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrJkw-ejf_PUtQrdxNeN94jd1rKhGaHQs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "86898584543-tadf6e4j3ghpl5ni4q3m9mgltsqq24it.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

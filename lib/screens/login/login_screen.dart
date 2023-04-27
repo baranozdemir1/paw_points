@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/screens/login/components/login_body.dart';
-import 'package:paw_points/size_config.dart';
+import '../../screens/login/components/login_body.dart';
+import '../../size_config.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({Key? key}) : super(key: key);

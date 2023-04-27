@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/components/no_account_text.dart';
-import 'package:paw_points/components/social_card.dart';
-import 'package:paw_points/screens/login/components/login_form.dart';
-import 'package:paw_points/size_config.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../../components/no_account_text.dart';
+import '../../../components/social_card.dart';
+import '../../../screens/login/components/login_form.dart';
+import '../../../size_config.dart';
 
 class LoginBody extends StatelessWidget {
   const LoginBody({Key? key}) : super(key: key);
