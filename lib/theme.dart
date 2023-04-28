@@ -12,6 +12,9 @@ ThemeData theme() {
     inputDecorationTheme: inputDecorationTheme(),
     visualDensity: VisualDensity.adaptivePlatformDensity,
     useMaterial3: true,
+    navigationBarTheme: NavigationBarThemeData(
+      indicatorColor: kPrimaryColor.withOpacity(0.24),
+    ),
   );
 }
 

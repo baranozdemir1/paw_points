@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:paw_points/riverpod/providers/auth_provider.dart';
+import 'package:paw_points/screens/login/login_screen.dart';
 import 'package:paw_points/vm/login/login_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static String routeName = '/home';
+  static String routeName = '/';
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +42,13 @@ class SignOutWidget extends HookConsumerWidget {
         child: Center(
           child: ElevatedButton(
             onPressed: () async {
-              await ref.read(loginControllerProvider.notifier).signOut();
+              await ref.read(authRepositoryProvider).signOut();
+              if (!context.mounted) return;
+              Navigator.pushNamedAndRemoveUntil(
+                context,
+                LoginScreen.routeName,
+                (Route<dynamic> route) => false,
+              );
             },
             child: const Text(
               'Sign Out',

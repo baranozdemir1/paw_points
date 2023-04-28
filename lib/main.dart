@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:paw_points/auth_checker.dart';
 import 'routes.dart';
 import 'screens/splash/splash_screen.dart';
 import 'theme.dart';
@@ -23,7 +24,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: theme(),
-      initialRoute: SplashScreen.routeName,
+      initialRoute: AuthChecker.routeName,
       routes: routes,
     );
   }

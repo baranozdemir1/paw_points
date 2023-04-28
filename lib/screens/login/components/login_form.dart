@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/screens/home/home_screen.dart';
+import 'package:paw_points/bottom_navigation.dart';
+import 'package:paw_points/screens/forgot_password/forgot_password_screen.dart';
 import '../../../vm/login/login_controller.dart';
 import '../../../vm/login/login_state.dart';
 import '../../../components/custom_suffix_icon.dart';
-import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../helpers/keyboard.dart';
-import '../../../screens/login_success/login_success_screen.dart';
 import '../../../size_config.dart';
 
 class LoginForm extends StatefulHookConsumerWidget {
@@ -21,7 +20,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool? remember = false;
   bool _loading = false;
 
   @override
@@ -49,19 +47,10 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           SizedBox(height: getProportionateScreenHeight(30)),
           Row(
             children: [
-              Checkbox(
-                value: remember,
-                activeColor: kPrimaryColor,
-                onChanged: (value) {
-                  setState(() {
-                    remember = value;
-                  });
-                },
-              ),
-              const Text('Remember me'),
               const Spacer(),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(context, '/forgotPass'),
+                onTap: () => Navigator.pushNamed(
+                    context, ForgotPasswordScreen.routeName),
                 child: const Text(
                   'Forgot Password',
                   style: TextStyle(
@@ -93,7 +82,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       .login(emailController.text, passwordController.text);
                   setState(() => _loading = false);
 
-                  Navigator.pushNamed(context, HomeScreen.routeName);
+                  if (!context.mounted) return;
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const BottomNavigationWidget(),
+                    ),
+                  );
                 }
               },
               child: _loading

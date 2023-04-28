@@ -19,10 +19,6 @@ class RegisterController extends StateNotifier<RegisterState> {
       state = RegisterStateError(e.toString());
     }
   }
-
-  Future<void> signOut() async {
-    await ref.read(authRepositoryProvider).signOut();
-  }
 }
 
 final registerControllerProvider =

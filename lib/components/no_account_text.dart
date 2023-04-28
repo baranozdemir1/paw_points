@@ -22,8 +22,9 @@ class NoAccountText extends StatelessWidget {
           child: Text(
             "Register",
             style: TextStyle(
-                fontSize: getProportionateScreenWidth(16),
-                color: kPrimaryColor),
+              fontSize: getProportionateScreenWidth(16),
+              color: kPrimaryColor,
+            ),
           ),
         ),
       ],

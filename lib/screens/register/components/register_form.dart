@@ -52,6 +52,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                       .register(emailController.text, passwordController.text);
                   setState(() => _loading = false);
 
+                  if (!context.mounted) return;
                   Navigator.pushNamed(context, HomeScreen.routeName);
                 }
               },

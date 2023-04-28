@@ -19,10 +19,6 @@ class LoginController extends StateNotifier<LoginState> {
       state = LoginStateError(e.toString());
     }
   }
-
-  Future<void> signOut() async {
-    await ref.read(authRepositoryProvider).signOut();
-  }
 }
 
 final loginControllerProvider =

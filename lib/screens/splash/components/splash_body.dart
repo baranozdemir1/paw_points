@@ -80,7 +80,10 @@ class _BodyState extends State<SplashBody> {
                           curve: Curves.ease,
                         );
                         if (currentPage == 2) {
-                          Navigator.pushNamed(context, LoginScreen.routeName);
+                          Navigator.pushNamed(
+                            context,
+                            LoginScreen.routeName,
+                          );
                         }
                       },
                     ),
