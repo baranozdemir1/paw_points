@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/riverpod/providers/auth_provider.dart';
 import 'package:paw_points/screens/login/login_screen.dart';
-import 'package:paw_points/vm/login/login_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static String routeName = '/';
+  static String routeName = '/home';
 
   @override
   Widget build(BuildContext context) {

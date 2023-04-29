@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/bottom_navigation.dart';
-import 'package:paw_points/screens/home/home_screen.dart';
-import 'package:paw_points/screens/splash/splash_screen.dart';
 
 import '../riverpod/providers/auth_provider.dart';
+import 'screens/root_screen.dart';
+import 'screens/splash/splash_screen.dart';
 
 class AuthChecker extends ConsumerWidget {
   const AuthChecker({Key? key}) : super(key: key);
@@ -17,7 +16,7 @@ class AuthChecker extends ConsumerWidget {
 
     return authState.when(
       data: (user) {
-        if (user != null) return const BottomNavigationWidget();
+        if (user != null) return const RootScreen();
         return const SplashScreen();
       },
       loading: () => const LoadingUI(),

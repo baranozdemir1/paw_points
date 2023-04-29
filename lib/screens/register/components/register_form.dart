@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/helpers/keyboard.dart';
-import 'package:paw_points/screens/home/home_screen.dart';
-import 'package:paw_points/vm/register/register_controller.dart';
+import 'package:paw_points/screens/complete_profile/complete_profile_screen.dart';
 import '../../../components/custom_suffix_icon.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 
-class RegisterForm extends StatefulHookConsumerWidget {
+class RegisterForm extends StatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<RegisterForm> createState() => _RegisterFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends ConsumerState<RegisterForm> {
+class _RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  bool _loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,33 +41,31 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  setState(() => _loading = true);
-                  KeyboardUtil.hideKeyboard(context);
-                  await ref
-                      .read(registerControllerProvider.notifier)
-                      .register(emailController.text, passwordController.text);
-                  setState(() => _loading = false);
+                  // setState(() => _loading = true);
+                  // KeyboardUtil.hideKeyboard(context);
+                  // await ref
+                  //     .read(registerControllerProvider.notifier)
+                  //     .register(emailController.text, passwordController.text);
+                  // setState(() => _loading = false);
 
                   if (!context.mounted) return;
-                  Navigator.pushNamed(context, HomeScreen.routeName);
+                  Navigator.pushNamed(
+                    context,
+                    CompleteProfileScreen.routeName,
+                    arguments: {
+                      'email': emailController.text,
+                      'password': passwordController.text
+                    },
+                  );
                 }
               },
-              child: _loading
-                  ? const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : Text(
-                      'Register',
-                      style: TextStyle(
-                        fontSize: getProportionateScreenWidth(18),
-                        color: Colors.white,
-                      ),
-                    ),
+              child: Text(
+                'Register',
+                style: TextStyle(
+                  fontSize: getProportionateScreenWidth(18),
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
         ],

@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class AuthRepository {
-  const AuthRepository(this._auth);
+  AuthRepository(this._auth);
 
   final FirebaseAuth _auth;
 
@@ -34,17 +38,52 @@ class AuthRepository {
     }
   }
 
-  Future<User?> registerWithEmailAndPassword(
+  Future<Map<String, dynamic>> registerWithEmailAndPassword(
     String email,
     String password,
+    String displayName,
+    String phoneNumber,
+    File profilePath,
   ) async {
     try {
+      final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      final Reference storageReference = FirebaseStorage.instance.ref();
+
       final result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
-      print('register result: $result');
-      return result.user;
+
+      String uniqueFileName =
+          result.user?.uid ?? DateTime.now().millisecondsSinceEpoch.toString();
+
+      final Reference storageProfilePicturesDir =
+          storageReference.child('profilePictures');
+      final Reference storageProfilePictureUpload =
+          storageProfilePicturesDir.child(uniqueFileName);
+
+      await storageProfilePictureUpload.putFile(profilePath);
+
+      final photoURL = await storageProfilePictureUpload.getDownloadURL();
+
+      final user = <String, dynamic>{
+        'uid': result.user?.uid,
+        'email': result.user?.email,
+        'displayName': result.user?.displayName ?? displayName,
+        'phoneNumber': result.user?.phoneNumber ?? phoneNumber,
+        'photoURL': result.user?.photoURL ?? photoURL
+      };
+      await firebaseFirestore
+          .collection('users')
+          .doc(result.user?.uid)
+          .set(user)
+          .onError(
+            (error, stackTrace) => print('Error writing document: $error'),
+          )
+          .whenComplete(
+            () => print('Added user'),
+          );
+      return user;
     } on FirebaseAuthException catch (e) {
       throw e.message.toString();
     } catch (e) {

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/bottom_navigation.dart';
-import 'package:paw_points/screens/forgot_password/forgot_password_screen.dart';
+import 'package:paw_points/auth_checker.dart';
+
 import '../../../vm/login/login_controller.dart';
 import '../../../vm/login/login_state.dart';
 import '../../../components/custom_suffix_icon.dart';
 import '../../../constants.dart';
 import '../../../helpers/keyboard.dart';
 import '../../../size_config.dart';
+import '../../forgot_password/forgot_password_screen.dart';
+import '../../root_screen.dart';
 
 class LoginForm extends StatefulHookConsumerWidget {
   const LoginForm({Key? key}) : super(key: key);
@@ -77,18 +79,21 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   _formKey.currentState!.save();
                   setState(() => _loading = true);
                   KeyboardUtil.hideKeyboard(context);
-                  await ref
-                      .read(loginControllerProvider.notifier)
-                      .login(emailController.text, passwordController.text);
-                  setState(() => _loading = false);
-
-                  if (!context.mounted) return;
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const BottomNavigationWidget(),
-                    ),
-                  );
+                  try {
+                    await ref
+                        .read(loginControllerProvider.notifier)
+                        .login(emailController.text, passwordController.text);
+                  } catch (e) {
+                    print(e);
+                  } finally {
+                    setState(() => _loading = false);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AuthChecker(),
+                      ),
+                    );
+                  }
                 }
               },
               child: _loading
