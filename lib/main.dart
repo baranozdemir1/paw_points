@@ -4,9 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/auth_checker.dart';
 import 'package:paw_points/components/loader.dart';
 import 'package:paw_points/riverpod/repository/auth_repository.dart';
-import 'package:paw_points/screens/root_screen.dart';
 
-import 'routes.dart';
 import 'theme.dart';
 import 'firebase_options.dart';
 

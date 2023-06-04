@@ -183,29 +183,41 @@ class AuthRepository {
     }
   }
 
-  Future<UserModel?> updateUserProfile(
+  Future<UserModel?> completeProfile(
     String uid,
     String displayName,
     String phoneNumber,
-    File profilePath,
+    File? profilePath,
     BuildContext context,
   ) async {
     try {
-      final Reference storageProfilePicturesDir =
-          _storageRef.child('profilePictures');
-      final Reference storageProfilePictureUpload =
-          storageProfilePicturesDir.child(uid);
+      if (profilePath != null) {
+        Reference storageProfilePicturesDir =
+            _storageRef.child('profilePictures').child(uid);
 
-      await storageProfilePictureUpload.putFile(profilePath);
+        bool isExists = await fileExists(uid);
 
-      final photoURL = await storageProfilePictureUpload.getDownloadURL();
-      print('photoURL $photoURL');
+        if (isExists) {
+          await storageProfilePicturesDir.delete().then((_) {
+            print('success removed');
+          }).catchError((error) {
+            print('error on removed: $error');
+          });
+        }
 
-      await _users.doc(uid).update({
-        'displayName': displayName,
-        'phoneNumber': phoneNumber,
-        'photoURL': photoURL
-      });
+        await storageProfilePicturesDir.putFile(profilePath);
+        String photoURL = await storageProfilePicturesDir.getDownloadURL();
+        await _users.doc(uid).update({
+          'displayName': displayName,
+          'phoneNumber': phoneNumber,
+          'photoURL': photoURL
+        });
+      } else {
+        await _users.doc(uid).update({
+          'displayName': displayName,
+          'phoneNumber': phoneNumber,
+        });
+      }
 
       UserModel userModel = await getUserData(uid).first;
 
@@ -241,5 +253,16 @@ class AuthRepository {
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map(
         (event) => UserModel.fromMap(event.data() as Map<String, dynamic>));
+  }
+
+  Future<bool> fileExists(String fileName) async {
+    Reference ref = _storageRef.child('profilePictures').child(fileName);
+
+    try {
+      await ref.getMetadata();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }

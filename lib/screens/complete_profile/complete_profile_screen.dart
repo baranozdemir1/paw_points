@@ -11,16 +11,16 @@ class CompleteProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return WillPopScope(
-        child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Complete Profile'),
-            automaticallyImplyLeading: false,
-          ),
-          body: const CompleteProfileBody(
-          ),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Complete Profile'),
+          automaticallyImplyLeading: false,
         ),
-        onWillPop: () async {
-          return false;
-        });
+        body: const CompleteProfileBody(),
+      ),
+      onWillPop: () async {
+        return false;
+      },
+    );
   }
 }

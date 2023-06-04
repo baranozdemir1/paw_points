@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/riverpod/repository/auth_repository.dart';
+import 'package:paw_points/screens/my_account/my_account.dart';
 
 import '../../../constants.dart';
-import '../../../models/user_model.dart';
 import '../../../riverpod/services/user_state.dart';
 
 class ProfileBody extends ConsumerWidget {
@@ -27,7 +27,14 @@ class ProfileBody extends ConsumerWidget {
         ProfileMenu(
           text: 'My Account',
           icon: CupertinoIcons.person,
-          press: () {},
+          press: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const MyAccountScreen(),
+              ),
+            );
+          },
         ),
         ProfileMenu(
           text: 'Notification',

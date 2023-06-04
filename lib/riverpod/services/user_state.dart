@@ -84,18 +84,17 @@ class UserState extends StateNotifier<UserModel?> {
     String uid,
     String displayName,
     String phoneNumber,
-    File profilePath,
+    File? profilePath,
     BuildContext context,
   ) async {
     try {
-      UserModel? user =
-          await ref.read(authRepositoryProvider).updateUserProfile(
-                uid,
-                displayName,
-                phoneNumber,
-                profilePath,
-                context,
-              );
+      UserModel? user = await ref.read(authRepositoryProvider).completeProfile(
+            uid,
+            displayName,
+            phoneNumber,
+            profilePath,
+            context,
+          );
 
       state = user;
     } catch (e) {

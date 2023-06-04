@@ -81,7 +81,12 @@ class _RootScreenState extends State<RootScreen> {
               ),
               child: IconButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(PawScreen.routeName);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const PawScreen(),
+                    ),
+                  );
                 },
                 icon: const Icon(
                   CupertinoIcons.location_solid,
