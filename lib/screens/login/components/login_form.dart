@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/auth_checker.dart';
+import 'package:paw_points/riverpod/repository/auth_repository.dart';
+import 'package:paw_points/riverpod/services/user_state.dart';
 
-import '../../../vm/login/login_controller.dart';
-import '../../../vm/login/login_state.dart';
 import '../../../components/custom_suffix_icon.dart';
 import '../../../constants.dart';
 import '../../../helpers/keyboard.dart';
 import '../../../size_config.dart';
 import '../../forgot_password/forgot_password_screen.dart';
-import '../../root_screen.dart';
 
-class LoginForm extends StatefulHookConsumerWidget {
+class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({Key? key}) : super(key: key);
 
   @override
@@ -22,22 +20,17 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  bool _loading = false;
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
-    ref.listen<LoginState>(
-      loginControllerProvider,
-      ((previus, state) {
-        if (state is LoginStateError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error),
-            ),
-          );
-        }
-      }),
-    );
+    final auth = ref.watch(authRepositoryProvider);
+
+    loading() {
+      setState(() {
+        isLoading = !isLoading;
+      });
+    }
 
     return Form(
       key: _formKey,
@@ -51,8 +44,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             children: [
               const Spacer(),
               GestureDetector(
-                onTap: () => Navigator.pushNamed(
-                    context, ForgotPasswordScreen.routeName),
+                onTap: () => Navigator.of(context)
+                    .pushNamed(ForgotPasswordScreen.routeName),
                 child: const Text(
                   'Forgot Password',
                   style: TextStyle(
@@ -77,26 +70,30 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  setState(() => _loading = true);
                   KeyboardUtil.hideKeyboard(context);
-                  try {
-                    await ref
-                        .read(loginControllerProvider.notifier)
-                        .login(emailController.text, passwordController.text);
-                  } catch (e) {
-                    print(e);
-                  } finally {
-                    setState(() => _loading = false);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AuthChecker(),
-                      ),
-                    );
-                  }
+
+                  loading();
+                  await ref
+                      .read(userStateProvider.notifier)
+                      .signIn(
+                        emailController.text,
+                        passwordController.text,
+                        context,
+                      )
+                      .whenComplete(
+                        () => auth.authStateChange.listen(
+                          (event) {
+                            print('login event $event');
+                            if (event == null) {
+                              loading();
+                              return;
+                            }
+                          },
+                        ),
+                      );
                 }
               },
-              child: _loading
+              child: isLoading
                   ? const SizedBox(
                       width: 20,
                       height: 20,

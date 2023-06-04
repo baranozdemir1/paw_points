@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:paw_points/screens/paw/components/paw_body.dart';
 
 class PawScreen extends StatelessWidget {
   const PawScreen({super.key});
@@ -9,21 +9,10 @@ class PawScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 300,
-          ),
-          Center(
-            child: TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Icon(CupertinoIcons.left_chevron),
-            ),
-          ),
-        ],
+      appBar: AppBar(
+        title: const Text('Paw Points'),
       ),
+      body: const PawBody(),
     );
   }
 }

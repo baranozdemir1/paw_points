@@ -1,24 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/screens/complete_profile/complete_profile_screen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:paw_points/riverpod/repository/auth_repository.dart';
+import 'package:paw_points/riverpod/services/user_state.dart';
+
 import '../../../components/custom_suffix_icon.dart';
 import '../../../constants.dart';
+import '../../../helpers/keyboard.dart';
 import '../../../size_config.dart';
+import '../../complete_profile/complete_profile_screen.dart';
 
-class RegisterForm extends StatefulWidget {
+class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
 
   @override
-  State<RegisterForm> createState() => _RegisterFormState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    loading() {
+      setState(() {
+        isLoading = !isLoading;
+      });
+    }
+
+    final auth = ref.watch(authRepositoryProvider);
+
     return Form(
       key: _formKey,
       child: Column(
@@ -41,31 +55,52 @@ class _RegisterFormState extends State<RegisterForm> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  // setState(() => _loading = true);
-                  // KeyboardUtil.hideKeyboard(context);
-                  // await ref
-                  //     .read(registerControllerProvider.notifier)
-                  //     .register(emailController.text, passwordController.text);
-                  // setState(() => _loading = false);
+                  KeyboardUtil.hideKeyboard(context);
 
-                  if (!context.mounted) return;
-                  Navigator.pushNamed(
-                    context,
-                    CompleteProfileScreen.routeName,
-                    arguments: {
-                      'email': emailController.text,
-                      'password': passwordController.text
-                    },
-                  );
+                  loading();
+                  await ref
+                      .read(userStateProvider.notifier)
+                      .register(
+                        emailController.text,
+                        passwordController.text,
+                        context,
+                      )
+                      .whenComplete(
+                        () => auth.authStateChange.listen(
+                          (event) {
+                            print('event $event');
+                            if (event == null) {
+                              loading();
+                              return;
+                            }
+                            loading();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CompleteProfileScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                      );
                 }
               },
-              child: Text(
-                'Register',
-                style: TextStyle(
-                  fontSize: getProportionateScreenWidth(18),
-                  color: Colors.white,
-                ),
-              ),
+              child: isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                  : Text(
+                      'Register',
+                      style: TextStyle(
+                        fontSize: getProportionateScreenWidth(18),
+                        color: Colors.white,
+                      ),
+                    ),
             ),
           ),
         ],

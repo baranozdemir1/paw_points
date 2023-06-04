@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/riverpod/providers/auth_provider.dart';
-import 'package:paw_points/size_config.dart';
 
 import '../../../components/custom_suffix_icon.dart';
 import '../../../constants.dart';
 import '../../../helpers/keyboard.dart';
+import '../../../size_config.dart';
 
 class ForgotPasswordForm extends StatefulHookConsumerWidget {
   const ForgotPasswordForm({super.key});
@@ -60,9 +59,9 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
                   _formKey.currentState!.save();
                   setState(() => _loading = true);
                   KeyboardUtil.hideKeyboard(context);
-                  await ref
-                      .read(authRepositoryProvider)
-                      .resetPassword(emailController.text);
+                  // await ref
+                  //     .read(authRepositoryProvider)
+                  //     .resetPassword(emailController.text);
                   setState(() => _loading = false);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

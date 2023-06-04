@@ -18,7 +18,11 @@ class NoAccountText extends StatelessWidget {
           style: TextStyle(fontSize: getProportionateScreenWidth(16)),
         ),
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, RegisterScreen.routeName),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) => const RegisterScreen(),
+            ),
+          ),
           child: Text(
             "Register",
             style: TextStyle(

@@ -1,39 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../riverpod/providers/auth_provider.dart';
-import 'screens/root_screen.dart';
-import 'screens/splash/splash_screen.dart';
+import 'package:paw_points/components/loader.dart';
+import 'package:paw_points/riverpod/repository/auth_repository.dart';
+import 'package:paw_points/screens/login/login_screen.dart';
+import 'package:paw_points/screens/root_screen.dart';
 
 class AuthChecker extends ConsumerWidget {
-  const AuthChecker({Key? key}) : super(key: key);
-
-  static const String routeName = '/auth';
+  const AuthChecker({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authStateProvider);
-
     return authState.when(
-      data: (user) {
-        if (user != null) return const RootScreen();
-        return const SplashScreen();
+      data: (data) {
+        if (data != null) return const RootScreen();
+        return const LoginScreen();
       },
-      loading: () => const LoadingUI(),
-      error: (e, trace) => const SplashScreen(),
-    );
-  }
-}
-
-class LoadingUI extends StatelessWidget {
-  const LoadingUI({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
+      error: (error, trace) => const Dialog(),
+      loading: () => const Loader(),
     );
   }
 }

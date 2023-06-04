@@ -4,14 +4,7 @@ import '../../../size_config.dart';
 import 'complete_profile_form.dart';
 
 class CompleteProfileBody extends StatelessWidget {
-  const CompleteProfileBody({
-    super.key,
-    required this.email,
-    required this.password,
-  });
-
-  final String email;
-  final String password;
+  const CompleteProfileBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +19,7 @@ class CompleteProfileBody extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: SizeConfig.screenHeight * 0.03),
-                CompleteProfileForm(
-                  email: email,
-                  password: password,
-                ),
+                const CompleteProfileForm(),
                 SizedBox(height: SizeConfig.screenHeight * 0.04),
                 Text(
                   'By continuing your confirm that you agree \nwith our Term and Condition',

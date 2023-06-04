@@ -1,26 +1,19 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:paw_points/riverpod/services/user_state.dart';
+import 'package:paw_points/screens/home/home_screen.dart';
 
 import '../../../constants.dart';
 import '../../../helpers/keyboard.dart';
 import '../../../size_config.dart';
-import '../../../vm/register/register_controller.dart';
-import '../../root_screen.dart';
 
-class CompleteProfileForm extends StatefulHookConsumerWidget {
-  const CompleteProfileForm({
-    super.key,
-    required this.email,
-    required this.password,
-  });
-
-  final String email;
-  final String password;
+class CompleteProfileForm extends ConsumerStatefulWidget {
+  const CompleteProfileForm({super.key});
 
   @override
   ConsumerState<CompleteProfileForm> createState() =>
@@ -36,22 +29,11 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
   bool _loading = false;
   File? _image;
 
-  late String email;
-  late String password;
   late String displayName;
-
-  @override
-  void initState() {
-    super.initState();
-    email = widget.email;
-    password = widget.password;
-    displayName = '${firstNameController.text} ${lastNameController.text}';
-  }
-
   @override
   Widget build(BuildContext context) {
-    print(email);
-    print(password);
+    final user = ref.watch(userStateProvider);
+
     return Form(
       key: _formKey,
       child: Column(
@@ -108,15 +90,22 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
                           }
                           _loading = false;
                         } on PlatformException catch (e) {
-                          print(e.message);
+                          if (e.code == 'invalid_image') {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    'Invalid image. Please change your image.'),
+                              ),
+                            );
+                          }
                         } catch (e) {
-                          print(e);
+                          throw e.toString();
                         }
                       },
                       alignment: Alignment.center,
                       color: Colors.white,
                       icon: const Icon(
-                        FeatherIcons.camera,
+                        CupertinoIcons.camera,
                         size: 20,
                       ),
                     ),
@@ -144,19 +133,46 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   _formKey.currentState!.save();
-                  setState(() => _loading = true);
+                  setState(() {
+                    displayName =
+                        '${firstNameController.text} ${lastNameController.text}';
+                    _loading = true;
+                  });
                   KeyboardUtil.hideKeyboard(context);
-                  await ref.read(registerControllerProvider.notifier).register(
-                        email,
-                        password,
+
+                  await ref
+                      .read(userStateProvider.notifier)
+                      .completeProfile(
+                        user!.uid!,
                         displayName,
                         phoneNumberController.text,
                         _image!,
+                        context,
+                      )
+                      .whenComplete(
+                    () {
+                      setState(() {
+                        _loading = false;
+                      });
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const HomeScreen(),
+                        ),
                       );
-                  setState(() => _loading = false);
-
-                  if (!context.mounted) return;
-                  Navigator.pushNamed(context, RootScreen.routeName);
+                    },
+                  );
+                  // ref
+                  //     .read(authControllerProvider.notifier)
+                  //     .updateUserProfile(
+                  //       context,
+                  //       user.uid!,
+                  //       displayName,
+                  //       phoneNumberController.text,
+                  //       _image!,
+                  //     );
+                  // setState(() => _loading = false);
+                  // Navigator.of(context).pushNamed('/');
                 }
               },
               child: _loading
@@ -204,7 +220,7 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
             getProportionateScreenWidth(10),
           ),
           child: Icon(
-            FeatherIcons.user,
+            CupertinoIcons.person,
             color: kTextColor,
             size: getProportionateScreenWidth(20),
           ),
@@ -235,7 +251,7 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
             getProportionateScreenWidth(10),
           ),
           child: Icon(
-            FeatherIcons.user,
+            CupertinoIcons.person,
             color: kTextColor,
             size: getProportionateScreenWidth(20),
           ),
@@ -266,7 +282,7 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
             getProportionateScreenWidth(10),
           ),
           child: Icon(
-            FeatherIcons.phone,
+            CupertinoIcons.phone,
             color: kTextColor,
             size: getProportionateScreenWidth(20),
           ),
@@ -297,7 +313,7 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
             getProportionateScreenWidth(10),
           ),
           child: Icon(
-            FeatherIcons.mapPin,
+            CupertinoIcons.location,
             color: kTextColor,
             size: getProportionateScreenWidth(20),
           ),

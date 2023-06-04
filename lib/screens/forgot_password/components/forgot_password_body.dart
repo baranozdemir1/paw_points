@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:paw_points/screens/forgot_password/components/forgot_password_form.dart';
-import 'package:paw_points/size_config.dart';
+
+import '../../../size_config.dart';
+import 'forgot_password_form.dart';
 
 class ForgotPasswordBody extends StatelessWidget {
   const ForgotPasswordBody({super.key});

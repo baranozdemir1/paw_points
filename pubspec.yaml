@@ -8,17 +8,19 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.5.3
-  equatable: ^2.0.5
+  cupertino_icons: ^1.0.5
   firebase_auth: ^4.4.2
   firebase_core: ^2.10.0
   firebase_storage: ^11.1.1
   flutter:
     sdk: flutter
-  flutter_feather_icons: ^2.0.0+1
   flutter_svg: ^2.0.5
   google_fonts: ^4.0.3
+  google_maps_flutter: ^2.2.6
+  google_sign_in: ^6.1.0
   hooks_riverpod: ^2.3.6
   image_picker: ^0.8.7+4
+  path_provider: ^2.0.15
 
 dev_dependencies:
   flutter_test:

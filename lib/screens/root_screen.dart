@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:paw_points/constants.dart';
-import 'package:paw_points/screens/paw/paw_screen.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import '../constants.dart';
 import 'home/home_screen.dart';
+import 'paw/paw_screen.dart';
+import 'profile/profile_screen.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
@@ -21,34 +23,16 @@ class _RootScreenState extends State<RootScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: newNav(context),
+      bottomNavigationBar: bottomNavBar(context),
       body: [
         const HomeScreen(),
-        Container(
-          color: Colors.green,
-          alignment: Alignment.center,
-          child: const Text(
-            'Map Page',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-        Container(
-          color: Colors.blue,
-          alignment: Alignment.center,
-          child: const Text(
-            'Settings Page',
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
+        const Spacer(),
+        const ProfileScreen(),
       ][currentPageIndex],
     );
   }
 
-  Container newNav(BuildContext context) {
+  Container bottomNavBar(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(
         top: 15.0,
@@ -76,8 +60,9 @@ class _RootScreenState extends State<RootScreen> {
                   currentPageIndex = 0;
                 });
               },
-              icon: Icon(
-                CupertinoIcons.paw,
+              icon: SvgPicture.asset(
+                'assets/icons/paw.svg',
+                height: 25,
                 color:
                     currentPageIndex == 0 ? kPrimaryColor : inActiveIconColor,
               ),
@@ -96,11 +81,12 @@ class _RootScreenState extends State<RootScreen> {
               ),
               child: IconButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, PawScreen.routeName);
+                  Navigator.of(context).pushNamed(PawScreen.routeName);
                 },
                 icon: const Icon(
-                  CupertinoIcons.placemark_fill,
+                  CupertinoIcons.location_solid,
                   color: Colors.white,
+                  size: 30,
                 ),
               ),
             ),
@@ -114,67 +100,11 @@ class _RootScreenState extends State<RootScreen> {
                 CupertinoIcons.person_fill,
                 color:
                     currentPageIndex == 2 ? kPrimaryColor : inActiveIconColor,
+                size: 30,
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Container oldNav(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-        color: Colors.red,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(40),
-          topRight: Radius.circular(40),
-        ),
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(0, -15),
-            blurRadius: 20,
-            color: const Color(0xFFDADADA).withOpacity(0.15),
-          ),
-        ],
-      ),
-      child: NavigationBar(
-        labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-        onDestinationSelected: (int index) {
-          if (index == 1) {
-            Navigator.pushNamed(context, PawScreen.routeName);
-          } else {
-            setState(() {
-              currentPageIndex = index;
-            });
-          }
-        },
-        selectedIndex: currentPageIndex,
-        destinations: const [
-          NavigationDestination(
-            icon: Icon(CupertinoIcons.paw),
-            label: 'Home',
-          ),
-          NavigationDestination(
-            icon: Icon(CupertinoIcons.person),
-            label: 'Map',
-            selectedIcon: Icon(
-              CupertinoIcons.person_fill,
-              color: kPrimaryColor,
-            ),
-          ),
-          NavigationDestination(
-            icon: Icon(CupertinoIcons.person),
-            label: 'Map',
-            selectedIcon: Icon(
-              CupertinoIcons.person_fill,
-              color: kPrimaryColor,
-            ),
-          ),
-        ],
       ),
     );
   }

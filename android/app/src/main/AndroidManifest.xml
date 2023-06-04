@@ -4,6 +4,8 @@
         android:label="paw_points"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCJtY-KV738_QG4iCSi9F5PyKTRNjmimJA"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
