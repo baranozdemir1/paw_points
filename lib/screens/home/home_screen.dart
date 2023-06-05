@@ -1,42 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:paw_points/riverpod/repository/auth_repository.dart';
-import 'package:paw_points/riverpod/services/user_state.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:paw_points/components/location_report.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  static String routeName = '/home';
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userStateProvider);
-    print(user);
+  Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 300,
-          ),
-          const Center(
-            child: Text('Home Screen'),
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                await ref.read(authRepositoryProvider).signOut();
-              },
-              child: Text('logout')),
-          Text(user?.displayName ?? ''),
-          const SizedBox(
-            height: 50,
-          ),
-          QrImageView(
-            data: '1234567890',
-            version: QrVersions.auto,
-            size: 200.0,
-          ),
-        ],
+      appBar: AppBar(
+        title: Text('QR'),
+      ),
+      body: ElevatedButton(
+        child: Text('click'),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const LocationReport(),
+              settings: RouteSettings(
+                arguments: ReportArguments(
+                  'markerId',
+                  latitude: 35.00,
+                  longitude: 27.00,
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }
