@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:86898584543:android:11625f88b9fa02b0ff726a",
         "android_client_info": {
-          "package_name": "com.example.paw_points"
+          "package_name": "com.baranozdemir.paw_points"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "86898584543-44a3fn81v6n0b1ub6i3iks5bl1f14bc9.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.paw_points",
+            "package_name": "com.baranozdemir.paw_points",
             "certificate_hash": "388e54f29696c09805da20f75ca2c3ff1cd17ccb"
           }
         },
@@ -42,7 +42,7 @@
               "client_id": "86898584543-9uap84oed2lv5em8jp50q4sthkif7q5l.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.pawPoints"
+                "bundle_id": "com.baranozdemir.pawPoints"
               }
             }
           ]

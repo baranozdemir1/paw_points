@@ -65,6 +65,6 @@ class DefaultFirebaseOptions {
     storageBucket: 'paw-points-109d2.appspot.com',
     iosClientId:
         '86898584543-9uap84oed2lv5em8jp50q4sthkif7q5l.apps.googleusercontent.com',
-    iosBundleId: 'com.example.pawPoints',
+    iosBundleId: 'com.baranozdemir.pawPoints',
   );
 }

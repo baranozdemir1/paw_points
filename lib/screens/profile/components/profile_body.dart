@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/riverpod/repository/auth_repository.dart';
+import 'package:paw_points/screens/login/login_screen.dart';
 import 'package:paw_points/screens/my_account/my_account.dart';
 
 import '../../../constants.dart';
 import '../../../riverpod/services/user_state.dart';
+import '../../../size_config.dart';
 
 class ProfileBody extends ConsumerWidget {
   const ProfileBody({super.key});
@@ -55,7 +57,14 @@ class ProfileBody extends ConsumerWidget {
           text: 'Logout',
           icon: CupertinoIcons.square_arrow_right,
           press: () async {
-            await ref.read(authRepositoryProvider).signOut();
+            ref.read(authRepositoryProvider).signOut().then(
+                  (_) => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const LoginScreen(),
+                    ),
+                  ),
+                );
           },
         ),
       ],
@@ -78,23 +87,29 @@ class ProfileMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: EdgeInsets.symmetric(
+        horizontal: getProportionateScreenWidth(20),
+        vertical: getProportionateScreenWidth(10),
+      ),
       child: ElevatedButton(
         onPressed: press,
         style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(18),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          padding: EdgeInsets.all(getProportionateScreenWidth(18)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(
+              getProportionateScreenWidth(15),
+            ),
+          ),
           backgroundColor: const Color(0xFFF5F6F9),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              size: 25,
+              size: getProportionateScreenWidth(25),
               color: kPrimaryColor,
             ),
-            const SizedBox(width: 20),
+            SizedBox(width: getProportionateScreenWidth(30)),
             Expanded(
               child: Text(
                 text,

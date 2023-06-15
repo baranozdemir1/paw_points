@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -20,9 +22,37 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.86898584543-9uap84oed2lv5em8jp50q4sthkif7q5l</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>comgooglemaps</string>
+		<string>comgooglemaps-x-callback</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Access to your camera is required to capture and upload images.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app requires access to your location even when running in the background to provide continuous services and updates.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app requires access to your location while in use to provide personalized services and features.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Access to your microphone is required to record and upload audio.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Access to your photo library is required to upload images.</string>
+	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -43,26 +73,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
-	<key>UIApplicationSupportsIndirectInputEvents</key>
-	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need to upload image</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Need to upload image</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Need to upload image</string>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.86898584543-9uap84oed2lv5em8jp50q4sthkif7q5l</string>
-			</array>
-		</dict>
-	</array>
 </dict>
 </plist>

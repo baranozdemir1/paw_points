@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:paw_points/components/qr_scan_overlay.dart';
 import 'package:paw_points/components/qr_scanner_error_widget.dart';
+import 'package:paw_points/size_config.dart';
 
 class QRScanner extends StatelessWidget {
   const QRScanner({super.key, required this.onDetect});
@@ -11,6 +12,7 @@ class QRScanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     MobileScannerController cameraController = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
       detectionTimeoutMs: 1000,
@@ -50,12 +52,71 @@ class QRScanner extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                const SizedBox(height: 350),
+                SizedBox(height: getProportionateScreenHeight(25)),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     FloatingActionButton(
+                      heroTag: 'writePointKey',
+                      onPressed: () {
+                        // write the key showdialog
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              titlePadding: const EdgeInsets.only(
+                                top: 15,
+                                left: 20,
+                                bottom: 15,
+                              ),
+                              actionsPadding: const EdgeInsets.only(
+                                right: 20,
+                                bottom: 5,
+                                top: 5,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 20,
+                              ),
+                              title: const Text('Write Key'),
+                              content: const TextField(
+                                maxLength: 4,
+                                decoration: InputDecoration(
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 5,
+                                    horizontal: 15,
+                                  ),
+                                  hintText: 'Enter Key',
+                                ),
+                              ),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                                TextButton(
+                                  child: const Text('Write'),
+                                  onPressed: () {
+                                    // write the key
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      child: Icon(
+                        Icons.abc,
+                        size: getProportionateScreenWidth(35),
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    FloatingActionButton(
+                      heroTag: 'toggleTorch',
                       onPressed: () => cameraController.toggleTorch(),
                       child: ValueListenableBuilder(
                         valueListenable: cameraController.torchState,
@@ -64,7 +125,6 @@ class QRScanner extends StatelessWidget {
                             case TorchState.off:
                               return const Icon(
                                 Icons.flash_off,
-                                color: Colors.grey,
                               );
                             case TorchState.on:
                               return const Icon(
@@ -77,11 +137,7 @@ class QRScanner extends StatelessWidget {
                     ),
                     const SizedBox(width: 20),
                     FloatingActionButton(
-                      onPressed: () => cameraController.switchCamera(),
-                      child: const Icon(CupertinoIcons.switch_camera),
-                    ),
-                    const SizedBox(width: 20),
-                    FloatingActionButton(
+                      heroTag: 'closeScreen',
                       onPressed: () => Navigator.pop(context),
                       child: const Icon(CupertinoIcons.xmark),
                     ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:paw_points/helpers/paw_points_helper.dart';
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../screens/login/login_screen.dart';
@@ -74,14 +75,21 @@ class _BodyState extends State<SplashBody> {
                     const Spacer(flex: 3),
                     DefaultButton(
                       text: currentPage == 2 ? 'Login' : 'Continue',
-                      press: () {
+                      press: () async {
                         controller.nextPage(
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.ease,
                         );
                         if (currentPage == 2) {
-                          Navigator.of(context)
-                              .pushNamed(LoginScreen.routeName);
+                          final BuildContext currentContext = context;
+                          PawPointsHelper.setHasSeenIntro().then(
+                            (_) => Navigator.push(
+                              currentContext,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            ),
+                          );
                         }
                       },
                     ),

@@ -44,8 +44,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             children: [
               const Spacer(),
               GestureDetector(
-                onTap: () => Navigator.of(context)
-                    .pushNamed(ForgotPasswordScreen.routeName),
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ForgotPasswordScreen(),
+                  ),
+                ),
                 child: const Text(
                   'Forgot Password',
                   style: TextStyle(
@@ -62,6 +66,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             width: double.infinity,
             height: getProportionateScreenHeight(56),
             child: FloatingActionButton(
+              heroTag: 'loginButton',
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

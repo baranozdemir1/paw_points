@@ -92,7 +92,7 @@ class _LocationReportState extends ConsumerState<LocationReport> {
                       Stack(
                         children: [
                           IconButton(
-                            iconSize: 40,
+                            iconSize: getProportionateScreenWidth(40),
                             onPressed: () {
                               pickImageFromGallery();
                             },
@@ -153,9 +153,10 @@ class _LocationReportState extends ConsumerState<LocationReport> {
                                         },
                                         child: Container(
                                           color: Colors.black.withOpacity(0.3),
-                                          child: const Icon(
+                                          child: Icon(
                                             CupertinoIcons.delete,
-                                            size: 30,
+                                            size:
+                                                getProportionateScreenWidth(30),
                                             color: Colors.white,
                                           ),
                                         ),
@@ -219,8 +220,7 @@ class _LocationReportState extends ConsumerState<LocationReport> {
                             : const SizedBox(height: 0),
                         SizedBox(height: getProportionateScreenHeight(30)),
                         TextFormField(
-                          initialValue:
-                              '${args.locationId} (${args.latitude.toString()}, ${args.longitude.toString()})',
+                          initialValue: args.locationId,
                           readOnly: true,
                           decoration: const InputDecoration(
                             labelText: "Location",
@@ -243,6 +243,7 @@ class _LocationReportState extends ConsumerState<LocationReport> {
                           width: double.infinity,
                           height: getProportionateScreenHeight(56),
                           child: FloatingActionButton(
+                            heroTag: 'sendReportButton',
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),

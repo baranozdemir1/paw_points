@@ -49,6 +49,7 @@ class _ForgotPasswordFormState extends ConsumerState<ForgotPasswordForm> {
             width: double.infinity,
             height: getProportionateScreenHeight(56),
             child: FloatingActionButton(
+              heroTag: 'sendPasswordButton',
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

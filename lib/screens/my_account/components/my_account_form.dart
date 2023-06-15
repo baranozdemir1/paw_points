@@ -113,9 +113,9 @@ class _MyAccountScreenFormState extends ConsumerState<MyAccountScreenForm> {
                       },
                       alignment: Alignment.center,
                       color: Colors.white,
-                      icon: const Icon(
+                      icon: Icon(
                         CupertinoIcons.camera,
-                        size: 20,
+                        size: getProportionateScreenWidth(20),
                       ),
                     ),
                   ),
@@ -134,6 +134,7 @@ class _MyAccountScreenFormState extends ConsumerState<MyAccountScreenForm> {
             width: double.infinity,
             height: getProportionateScreenHeight(56),
             child: FloatingActionButton(
+              heroTag: 'profileSaveButton',
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

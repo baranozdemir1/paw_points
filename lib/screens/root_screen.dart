@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../constants.dart';
+import '../size_config.dart';
 import 'home/home_screen.dart';
 import 'paw/paw_screen.dart';
 import 'profile/profile_screen.dart';
 
 class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
-
-  static String routeName = '/';
 
   @override
   State<RootScreen> createState() => _RootScreenState();
@@ -22,13 +21,19 @@ class _RootScreenState extends State<RootScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: bottomNavBar(context),
-      body: [
-        const HomeScreen(),
-        const Spacer(),
-        const ProfileScreen(),
-      ][currentPageIndex],
+    SizeConfig().init(context);
+    return WillPopScope(
+      child: Scaffold(
+        bottomNavigationBar: bottomNavBar(context),
+        body: [
+          const HomeScreen(),
+          const Spacer(),
+          const ProfileScreen(),
+        ][currentPageIndex],
+      ),
+      onWillPop: () async {
+        return false;
+      },
     );
   }
 
@@ -63,8 +68,10 @@ class _RootScreenState extends State<RootScreen> {
               icon: SvgPicture.asset(
                 'assets/icons/paw.svg',
                 height: 25,
-                color:
-                    currentPageIndex == 0 ? kPrimaryColor : inActiveIconColor,
+                colorFilter: ColorFilter.mode(
+                  currentPageIndex == 0 ? kPrimaryColor : inActiveIconColor,
+                  BlendMode.srcIn,
+                ),
               ),
             ),
             Container(
@@ -88,10 +95,10 @@ class _RootScreenState extends State<RootScreen> {
                     ),
                   );
                 },
-                icon: const Icon(
+                icon: Icon(
                   CupertinoIcons.location_solid,
                   color: Colors.white,
-                  size: 30,
+                  size: getProportionateScreenWidth(30),
                 ),
               ),
             ),
@@ -105,7 +112,7 @@ class _RootScreenState extends State<RootScreen> {
                 CupertinoIcons.person_fill,
                 color:
                     currentPageIndex == 2 ? kPrimaryColor : inActiveIconColor,
-                size: 30,
+                size: getProportionateScreenWidth(30),
               ),
             ),
           ],

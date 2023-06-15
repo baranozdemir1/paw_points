@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/models/user_model.dart';
-import 'package:paw_points/riverpod/providers/firebase_provider.dart';
 import 'package:paw_points/riverpod/repository/auth_repository.dart';
 
 final userStateProvider = StateNotifierProvider<UserState, UserModel?>(
@@ -19,7 +18,7 @@ class UserState extends StateNotifier<UserModel?> {
         if (user != null) {
           final userDoc =
               await _firestore.collection('users').doc(user.uid).get();
-          state = UserModel(
+          final userModel = UserModel(
             displayName: userDoc['displayName'],
             email: userDoc['email'],
             phoneNumber: userDoc['phoneNumber'],
@@ -27,6 +26,8 @@ class UserState extends StateNotifier<UserModel?> {
             uid: user.uid,
             registeredType: userDoc['registeredType'],
           );
+          state = userModel;
+          _currentUser = userModel;
         } else {
           state = null;
         }
@@ -36,6 +37,26 @@ class UserState extends StateNotifier<UserModel?> {
 
   final Ref ref;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  UserModel? _currentUser;
+
+  Future<UserModel?> getCurrentUser() async {
+    if (_currentUser == null) {
+      final user = await ref.read(authRepositoryProvider).getCurrentUser();
+      if (user != null) {
+        final userDoc =
+            await _firestore.collection('users').doc(user.uid).get();
+        _currentUser = UserModel(
+          displayName: userDoc['displayName'],
+          email: userDoc['email'],
+          phoneNumber: userDoc['phoneNumber'],
+          photoURL: userDoc['photoURL'],
+          uid: user.uid,
+          registeredType: userDoc['registeredType'],
+        );
+      }
+    }
+    return _currentUser;
+  }
 
   Future<void> signIn(
     String email,

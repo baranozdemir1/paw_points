@@ -265,4 +265,23 @@ class AuthRepository {
       return false;
     }
   }
+
+  Future<UserModel?> getCurrentUser() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      final userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .get();
+      return UserModel(
+        displayName: userDoc['displayName'],
+        email: userDoc['email'],
+        phoneNumber: userDoc['phoneNumber'],
+        photoURL: userDoc['photoURL'],
+        uid: user.uid,
+        registeredType: userDoc['registeredType'],
+      );
+    }
+    return null;
+  }
 }

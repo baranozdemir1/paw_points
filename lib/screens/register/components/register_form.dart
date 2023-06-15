@@ -47,6 +47,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             width: double.infinity,
             height: getProportionateScreenHeight(56),
             child: FloatingActionButton(
+              heroTag: 'registerButton',
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

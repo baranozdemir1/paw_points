@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/riverpod/repository/auth_repository.dart';
 import 'package:paw_points/riverpod/services/user_state.dart';
 
-import '../../../components/loader.dart';
+import '../../../components/paw_points_loader.dart';
 import '../../../components/no_account_text.dart';
 import '../../../components/social_card.dart';
 import '../../../screens/login/components/login_form.dart';
@@ -31,7 +31,7 @@ class _LoginBodyState extends ConsumerState<LoginBody> {
 
     return SafeArea(
       child: isLoading
-          ? const Loader()
+          ? const PawPointsLoader()
           : SizedBox(
               width: double.infinity,
               child: Padding(

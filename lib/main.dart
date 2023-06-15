@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:paw_points/auth_checker.dart';
-import 'package:paw_points/components/loader.dart';
+import 'package:paw_points/components/paw_points_loader.dart';
 import 'package:paw_points/riverpod/repository/auth_repository.dart';
 
 import 'theme.dart';
@@ -50,7 +50,7 @@ class MainApp extends ConsumerWidget {
         error: (error, trace) {
           print("error: $error, trace: $trace");
         },
-        loading: () => const Loader(),
+        loading: () => const PawPointsLoader(),
       ),
     );
   }

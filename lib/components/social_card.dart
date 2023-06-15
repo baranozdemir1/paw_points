@@ -14,6 +14,7 @@ class SocialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return GestureDetector(
       onTap: press as void Function()?,
       child: Container(

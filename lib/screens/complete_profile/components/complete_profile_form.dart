@@ -5,8 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:paw_points/helpers/paw_points_helper.dart';
 import 'package:paw_points/riverpod/services/user_state.dart';
-import 'package:paw_points/screens/home/home_screen.dart';
+import 'package:paw_points/screens/root_screen.dart';
 
 import '../../../constants.dart';
 import '../../../helpers/keyboard.dart';
@@ -104,9 +105,9 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
                       },
                       alignment: Alignment.center,
                       color: Colors.white,
-                      icon: const Icon(
+                      icon: Icon(
                         CupertinoIcons.camera,
-                        size: 20,
+                        size: getProportionateScreenWidth(20),
                       ),
                     ),
                   ),
@@ -125,6 +126,7 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
             width: double.infinity,
             height: getProportionateScreenHeight(56),
             child: FloatingActionButton(
+              heroTag: 'completeProfileButton',
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
@@ -139,29 +141,32 @@ class _CompleteProfileFormState extends ConsumerState<CompleteProfileForm> {
                     _loading = true;
                   });
                   KeyboardUtil.hideKeyboard(context);
+                  await PawPointsHelper.getPawCirclePathFile()
+                      .then((localImage) async {
+                    await ref
+                        .read(userStateProvider.notifier)
+                        .completeProfile(
+                          user!.uid!,
+                          displayName,
+                          phoneNumberController.text,
+                          _image ?? localImage,
+                          context,
+                        )
+                        .whenComplete(
+                      () {
+                        setState(() {
+                          _loading = false;
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RootScreen(),
+                          ),
+                        );
+                      },
+                    );
+                  });
 
-                  await ref
-                      .read(userStateProvider.notifier)
-                      .completeProfile(
-                        user!.uid!,
-                        displayName,
-                        phoneNumberController.text,
-                        _image!,
-                        context,
-                      )
-                      .whenComplete(
-                    () {
-                      setState(() {
-                        _loading = false;
-                      });
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const HomeScreen(),
-                        ),
-                      );
-                    },
-                  );
                   // ref
                   //     .read(authControllerProvider.notifier)
                   //     .updateUserProfile(

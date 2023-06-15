@@ -1,4 +1,4 @@
-package com.example.paw_points
+package com.baranozdemir.paw_points
 
 import io.flutter.embedding.android.FlutterActivity
 
